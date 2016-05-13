@@ -277,7 +277,7 @@ function setMediaOverlayStyleColors(color, colorHighlight) {
 }
 
 var currentIndex = -1;
-
+var sentenceArray = nil;
 
 function findSentenceWithIDInView(els) {
     // @NOTE: is `span` too limiting?
@@ -294,14 +294,10 @@ function findSentenceWithIDInView(els) {
     return null
 }
 
-function findNextSentenceInArray(els) {
-    if( currentIndex >= 0)
-    {
-        currentIndex ++;
-        return els[currentIndex];
-    }
-    
-    return null
+function findNextSentenceInArray() {
+    currentIndex ++;
+    var sentence = sentenceArray[currentIndex];
+    return sentence;
 }
 
 function resetCurrentSentenceIndex() {
@@ -311,9 +307,9 @@ function resetCurrentSentenceIndex() {
 function getSentenceWithIndex(className){
     var sentence;
     if(currentIndex < 0){
-        sentence = findSentenceWithIDInView(document.querySelectorAll("span.sentence"));
+        sentence = findSentenceWithIDInView(sentenceArray);
     }else{
-        sentence = findNextSentenceInArray(document.querySelectorAll("span.sentence"));
+        sentence = findNextSentenceInArray();
     }
     
     var text = sentence.innerText || sentence.textContent;
@@ -364,7 +360,7 @@ function wrappingSentencesWithinPTags(){
     }
 
     function pushSpan(array, className, string, classNameOpt) {
-        if (!string.match('[a-zA-Z0-9]+')) {
+        if (!string.match('[a-zA-Z0-9]+') && string.length < 3) {
             array.push(string);
         } else {
             array.push('<span class="' + className + '">' + string + '</span>');
@@ -506,6 +502,8 @@ function wrappingSentencesWithinPTags(){
     }
     
     guessSenetences();
+    
+    sentenceArray = document.querySelectorAll("span.sentence");
 }
                                                          
                                                          
